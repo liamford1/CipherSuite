@@ -1,3 +1,23 @@
+/**
+ * @file main.cpp
+ * @brief CipherSuite - Main Application Entry Point
+ * 
+ * This file implements the main user interface for the encryption software,
+ * providing an interactive menu system for selecting and using different
+ * cryptographic algorithms. The application supports four classic ciphers:
+ * Caesar, Vigenère, A1Z26, and Atbash.
+ * 
+ * Features:
+ * - Interactive command-line interface
+ * - Input validation and error handling
+ * - Support for both encryption and decryption
+ * - Modern C++20 features (std::print, string_view, structured bindings)
+ * 
+ * @author CipherSuite Team
+ * @version 1.0
+ * @date 2024
+ */
+
 #include<iostream>
 #include<string>
 #include<print>
@@ -19,10 +39,17 @@ void printMenu() {
     std::println("4 - Atbash");
 }
 
+/**
+ * Validates user input for cipher selection
+ * @param input String view of user input
+ * @return Pair of (is_valid, numeric_value)
+ */
 std::pair<bool, int> validInput(const std::string_view input) {
+    // Check if first character is a digit
     if (not std::isdigit(input[0])) {
         return {false, 0};
     }
+    // Convert string to integer and validate range
     int input_num = std::atoi(input.data());
     return {input_num >=1 and input_num <= 4, input_num};
 }
@@ -45,18 +72,26 @@ std::pair<bool, int> validInput(const std::string_view input) {
     return value;
 }
 
+/**
+ * Reads and validates a numeric key from user input
+ * Supports negative numbers and handles invalid input gracefully
+ * @return Validated integer key
+ */
 [[nodiscard]] int readKey() {
     for (;;) {
         std::string key;
-        std::println("Choose a key number.");
+        std::cout << "Choose a key number.\n";
         std::getline(std::cin, key);
         bool is_digit = true;
+        
+        // Validate each character: digits only, with optional leading minus sign
         for (int i = 0; i < key.size(); i++) {
             if (not std::isdigit(key[i]) and not (i == 0 and key[i] == '-')) {
                 is_digit = false;
                 break;
             }
         }
+        
         if (is_digit) {
             return std::stoi(key);
         }
